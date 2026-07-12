@@ -216,9 +216,12 @@
             margin-left: var(--sidebar-w);
             padding-top: var(--topbar-h);
             min-height: 100vh;
+            display: flex;
+            flex-direction: column;
         }
         .main-content {
             padding: 28px 28px;
+            flex: 1;
         }
 
         /* ─── SIDEBAR OVERLAY (mobile) ──────────────────── */
@@ -477,6 +480,16 @@
         }
         .empty-state i { font-size: 52px; opacity: .3; margin-bottom: 12px; }
         .empty-state p { font-size: 14px; }
+
+        /* ─── FOOTER ───────────────────────────────────── */
+        .app-footer {
+            padding: 14px 24px;
+            border-top: 1px solid var(--border);
+            text-align: center;
+            font-size: 12px;
+            color: var(--text-light);
+            background: var(--bg-card);
+        }
     </style>
 
     @stack('styles')
@@ -571,6 +584,11 @@
 
         @yield('content')
     </div>
+
+    <!-- Footer -->
+    <footer class="app-footer">
+        &copy; 2026 Yusriyah
+    </footer>
 </main>
 
 <script>

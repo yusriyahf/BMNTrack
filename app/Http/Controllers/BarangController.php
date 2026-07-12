@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Barang;
 use App\Models\Ruangan;
+use App\Models\Gedung;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
@@ -19,9 +20,18 @@ class BarangController extends Controller
         if ($request->filled('search')) {
             $query->where('nama_barang', 'like', '%' . $request->search . '%');
         }
+        if ($request->filled('gedung_id')) {
+            $query->whereHas('ruangan', fn($q) => $q->where('gedung_id', $request->gedung_id));
+        }
+        if ($request->filled('ruangan_id')) {
+            $query->where('ruangan_id', $request->ruangan_id);
+        }
 
-        $barang  = $query->latest()->paginate(10)->withQueryString();
-        return view('barang.index', compact('barang'));
+        $barang   = $query->latest()->paginate(10)->withQueryString();
+        $gedungs  = Gedung::orderBy('nama_gedung')->get();
+        $ruangans = Ruangan::with('gedung')->orderBy('nama_ruangan')->get();
+
+        return view('barang.index', compact('barang', 'gedungs', 'ruangans'));
     }
 
     public function create(Ruangan $ruangan)
