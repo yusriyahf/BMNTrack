@@ -41,6 +41,7 @@ class RuanganController extends Controller
             'luas_ruangan'     => 'nullable|string|max:100',
             'lantai'           => 'required|integer|min:1',
             'pic_ruangan'      => 'nullable|string|max:100',
+            'foto_pic'         => 'nullable|image|mimes:jpg,jpeg,png,webp|max:5120',
             'foto_ruangan'     => 'nullable|image|mimes:jpg,jpeg,png,webp|max:5120',
             'tanggal_pendataan'=> 'nullable|date',
         ], [
@@ -57,6 +58,9 @@ class RuanganController extends Controller
 
         if ($request->hasFile('foto_ruangan')) {
             $data['foto_ruangan'] = $request->file('foto_ruangan')->store('ruangan', 'public');
+        }
+        if ($request->hasFile('foto_pic')) {
+            $data['foto_pic'] = $request->file('foto_pic')->store('ruangan/pic', 'public');
         }
 
         Ruangan::create($data);
@@ -84,6 +88,7 @@ class RuanganController extends Controller
             'luas_ruangan'     => 'nullable|string|max:100',
             'lantai'           => 'required|integer|min:1',
             'pic_ruangan'      => 'nullable|string|max:100',
+            'foto_pic'         => 'nullable|image|mimes:jpg,jpeg,png,webp|max:5120',
             'foto_ruangan'     => 'nullable|image|mimes:jpg,jpeg,png,webp|max:5120',
             'tanggal_pendataan'=> 'nullable|date',
         ]);
@@ -99,6 +104,12 @@ class RuanganController extends Controller
             }
             $data['foto_ruangan'] = $request->file('foto_ruangan')->store('ruangan', 'public');
         }
+        if ($request->hasFile('foto_pic')) {
+            if ($ruangan->foto_pic) {
+                Storage::disk('public')->delete($ruangan->foto_pic);
+            }
+            $data['foto_pic'] = $request->file('foto_pic')->store('ruangan/pic', 'public');
+        }
 
         $ruangan->update($data);
 
@@ -109,6 +120,9 @@ class RuanganController extends Controller
     {
         if ($ruangan->foto_ruangan) {
             Storage::disk('public')->delete($ruangan->foto_ruangan);
+        }
+        if ($ruangan->foto_pic) {
+            Storage::disk('public')->delete($ruangan->foto_pic);
         }
         $ruangan->delete();
         return redirect()->route('ruangan.index')->with('success', 'Ruangan berhasil dihapus.');

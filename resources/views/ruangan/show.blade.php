@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('title', 'Detail Ruangan – ' . $ruangan->nama_ruangan)
-@section('page-title', $ruangan->nama_ruangan)
+@section('page-title', 'Detail Ruangan')
 @section('page-subtitle', 'Detail ruangan dan daftar aset di dalamnya')
 
 @push('styles')
@@ -195,6 +195,85 @@
     font-size: 13px; font-weight: 700; color: var(--primary);
 }
 
+/* Number badge on card */
+.card-number-badge {
+    position: absolute; top: 8px; left: 8px;
+    width: 26px; height: 26px;
+    background: rgba(0,0,0,.55);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    color: #fff; font-size: 11px; font-weight: 700;
+    z-index: 2;
+    line-height: 1;
+}
+
+/* Search bar */
+.barang-search-wrap {
+    padding: 16px 24px 0;
+    display: flex; align-items: center; gap: 10px;
+}
+.barang-search-input {
+    flex: 1;
+    height: 40px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 0 14px 0 38px;
+    font-size: 13px;
+    background: var(--bg-body);
+    color: var(--text);
+    outline: none;
+    transition: border-color .2s, box-shadow .2s;
+}
+.barang-search-input:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(var(--primary-rgb, 99,102,241),.12);
+}
+.barang-search-icon {
+    position: relative; margin-right: -34px; z-index: 1;
+    color: var(--text-light); font-size: 13px; padding-left: 12px;
+    pointer-events: none;
+}
+.barang-search-count {
+    font-size: 12px; color: var(--text-light); white-space: nowrap;
+}
+.barang-empty-search {
+    padding: 40px 24px; text-align: center;
+    color: var(--text-light); font-size: 14px;
+    display: none;
+}
+.barang-empty-search i { font-size: 32px; display: block; margin-bottom: 10px; opacity: .4; }
+
+/* Sort select */
+.sort-select {
+    height: 40px;
+    padding: 0 32px 0 10px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    background: var(--bg-card);
+    color: var(--text);
+    font-size: 12px; font-weight: 600;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: border-color .2s, box-shadow .2s;
+    flex-shrink: 0;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%236366f1' stroke-width='2.5'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+    outline: none;
+}
+.sort-select:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(99,102,241,.12); }
+
+/* Lightbox caption */
+.bmnmodal-img-caption {
+    text-align: center;
+    color: #fff;
+    font-size: 14px; font-weight: 600;
+    margin-top: 10px;
+    text-shadow: 0 1px 4px rgba(0,0,0,.6);
+    letter-spacing: .2px;
+}
+
 /* ──────────────────────────────────────────────
    MODAL / POPUP
 ────────────────────────────────────────────── */
@@ -263,6 +342,60 @@
 }
 .bmnmodal-close:hover { background: rgba(0,0,0,.6); }
 .bmnmodal-detail-header-area { position: relative; }
+
+/* PIC clickable info-item */
+.info-item-pic {
+    cursor: pointer;
+    transition: background .2s, border-color .2s;
+}
+.info-item-pic:hover {
+    background: var(--primary-ultra);
+    border-color: var(--primary-xlight);
+}
+.info-item-pic .pic-avatar {
+    display: flex; align-items: center; gap: 8px;
+    margin-top: 2px;
+}
+.info-item-pic .pic-thumb {
+    width: 28px; height: 28px;
+    border-radius: 50%; object-fit: cover;
+    border: 2px solid var(--primary-xlight);
+    flex-shrink: 0;
+}
+.info-item-pic .pic-thumb-placeholder {
+    width: 28px; height: 28px;
+    border-radius: 50%;
+    background: var(--primary-ultra);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 13px; color: var(--primary);
+    border: 2px solid var(--primary-xlight);
+    flex-shrink: 0;
+}
+/* PIC photo modal */
+.bmnmodal-pic-card {
+    background: var(--bg-card, #fff);
+    border-radius: 16px;
+    overflow: hidden;
+    width: 260px;
+    box-shadow: 0 24px 60px rgba(0,0,0,.4);
+    transform: scale(.92); transition: transform .28s;
+}
+.bmnmodal-backdrop.show .bmnmodal-pic-card { transform: scale(1); }
+.bmnmodal-pic-card img {
+    width: 100%; aspect-ratio: 1;
+    object-fit: cover; display: block;
+}
+.bmnmodal-pic-card-info {
+    padding: 14px 16px;
+    text-align: center;
+}
+.bmnmodal-pic-card-name {
+    font-size: 15px; font-weight: 700;
+}
+.bmnmodal-pic-card-label {
+    font-size: 11px; color: var(--text-light); margin-top: 2px;
+    text-transform: uppercase; letter-spacing: .5px;
+}
 </style>
 @endpush
 
@@ -314,9 +447,18 @@
                     <label><i class="fas fa-expand"></i> Luas</label>
                     <span>{{ $ruangan->luas_ruangan ?? '-' }}</span>
                 </div>
-                <div class="info-item">
+                <div class="info-item info-item-pic"
+                     onclick="openPicModal('{{ $ruangan->foto_pic ? asset('storage/'.$ruangan->foto_pic) : '' }}', '{{ addslashes($ruangan->pic_ruangan ?? '-') }}')"
+                     title="{{ $ruangan->foto_pic ? 'Klik untuk lihat foto PIC' : 'Belum ada foto PIC' }}">
                     <label><i class="fas fa-user-tie"></i> PIC</label>
-                    <span>{{ $ruangan->pic_ruangan ?? '-' }}</span>
+                    <div class="pic-avatar">
+                        @if($ruangan->foto_pic)
+                            <img src="{{ asset('storage/'.$ruangan->foto_pic) }}" class="pic-thumb" alt="PIC">
+                        @else
+                            <span class="pic-thumb-placeholder"><i class="fas fa-user"></i></span>
+                        @endif
+                        <span>{{ $ruangan->pic_ruangan ?? '-' }}</span>
+                    </div>
                 </div>
                 <div class="info-item">
                     <label><i class="fas fa-box"></i> Total Barang</label>
@@ -359,9 +501,34 @@
         </a>
     </div>
     @else
-    <div class="barang-grid">
-        @foreach($ruangan->barang as $b)
+    {{-- Search bar + Sort --}}
+    <div class="barang-search-wrap">
+        <i class="fas fa-search barang-search-icon"></i>
+        <input type="text" id="barangSearch" class="barang-search-input"
+               placeholder="Cari nama barang, kategori, kondisi…"
+               oninput="filterBarang(this.value)" autocomplete="off">
+        <span class="barang-search-count" id="barangSearchCount">
+            {{ $ruangan->barang->count() }} barang
+        </span>
+        <select class="sort-select" id="sortSelect" onchange="sortBarang(this.value)" title="Urutkan">
+            <option value="newest">↓ Terbaru</option>
+            <option value="oldest">↑ Terlama</option>
+            <option value="unit_desc">↓ Unit Terbanyak</option>
+            <option value="unit_asc">↑ Unit Tersedikit</option>
+        </select>
+    </div>
+    <div class="barang-empty-search" id="barangEmptySearch">
+        <i class="fas fa-search"></i>
+        Tidak ada barang yang cocok.
+    </div>
+    @php $barangSorted = $ruangan->barang->sortByDesc('id'); $barangTotal = $barangSorted->count(); @endphp
+    <div class="barang-grid" id="barangGrid">
+        @foreach($barangSorted as $b)
+        @php $chronoNo = $barangTotal - $loop->index; @endphp
         <div class="barang-card"
+             data-order="{{ $chronoNo }}"
+             data-jumlah="{{ $b->jumlah }}"
+             data-search="{{ strtolower($b->nama_barang . ' ' . ($b->kategori ?? '') . ' ' . ($b->kondisi ?? '') . ' ' . ($b->keterangan ?? ''))}}"
              onclick="openBarangDetail(
                 '{{ addslashes($b->nama_barang) }}',
                 '{{ $b->foto_barang ? asset('storage/'.$b->foto_barang) : '' }}',
@@ -369,9 +536,11 @@
                 '{{ addslashes($b->kondisi ?? '-') }}',
                 {{ $b->jumlah }},
                 '{{ addslashes($b->keterangan ?? '') }}',
-                '{{ addslashes($b->kode_barang ?? '-') }}'
+                '{{ addslashes($b->kode_barang ?? '-') }}',
+                {{ $chronoNo }}
              )">
             <div class="barang-card-img">
+                <span class="card-number-badge">{{ $chronoNo }}</span>
                 @if($b->foto_barang)
                     <img src="{{ asset('storage/' . $b->foto_barang) }}" alt="{{ $b->nama_barang }}">
                     <span class="img-zoom-icon" onclick="event.stopPropagation(); openImgModal('{{ asset('storage/'.$b->foto_barang) }}', '{{ addslashes($b->nama_barang) }}')">
@@ -388,11 +557,11 @@
             </div>
             <div class="barang-card-body">
                 <div class="barang-card-title">{{ $b->nama_barang }}</div>
-                <div class="barang-card-meta">
+                <!-- <div class="barang-card-meta">
                     @if($b->kategori)
                     <span class="badge badge-primary"><i class="fas fa-tag"></i> {{ $b->kategori }}</span>
                     @endif
-                </div>
+                </div> -->
                 @if($b->keterangan)
                 <div class="barang-card-desc">{{ Str::limit($b->keterangan, 70) }}</div>
                 @endif
@@ -426,8 +595,25 @@
 ════════════════════════════════ -->
 <div class="bmnmodal-backdrop" id="imgModal" onclick="closeImgModal()">
     <span class="bmnmodal-close" onclick="closeImgModal()"><i class="fas fa-times"></i></span>
-    <div class="bmnmodal-img-wrap" onclick="event.stopPropagation()">
-        <img id="imgModalSrc" src="" alt="">
+    <div style="display:flex;flex-direction:column;align-items:center;" onclick="event.stopPropagation()">
+        <div class="bmnmodal-img-wrap">
+            <img id="imgModalSrc" src="" alt="">
+        </div>
+        <div class="bmnmodal-img-caption" id="imgModalCaption"></div>
+    </div>
+</div>
+
+<!-- ════════════════════════════════
+     MODAL: Foto PIC
+════════════════════════════════ -->
+<div class="bmnmodal-backdrop" id="picModal" onclick="closePicModal()">
+    <span class="bmnmodal-close" onclick="closePicModal()"><i class="fas fa-times"></i></span>
+    <div class="bmnmodal-pic-card" onclick="event.stopPropagation()">
+        <img id="picModalImg" src="" alt="">
+        <div class="bmnmodal-pic-card-info">
+            <div class="bmnmodal-pic-card-name" id="picModalName"></div>
+            <div class="bmnmodal-pic-card-label"><i class="fas fa-user-tie"></i> Penanggung Jawab</div>
+        </div>
     </div>
 </div>
 
@@ -486,10 +672,11 @@ function toggleMobileDetail() {
 }
 
 // ─── Image lightbox ───────────────────────────
-function openImgModal(src, alt) {
+function openImgModal(src, caption) {
     if (!src) return;
     document.getElementById('imgModalSrc').src = src;
-    document.getElementById('imgModalSrc').alt = alt;
+    document.getElementById('imgModalSrc').alt = caption || '';
+    document.getElementById('imgModalCaption').textContent = caption || '';
     document.getElementById('imgModal').classList.add('show');
     document.body.style.overflow = 'hidden';
 }
@@ -499,7 +686,7 @@ function closeImgModal() {
 }
 
 // ─── Barang detail popup ──────────────────────
-function openBarangDetail(name, imgSrc, kategori, kondisi, jumlah, keterangan, kode) {
+function openBarangDetail(name, imgSrc, kategori, kondisi, jumlah, keterangan, kode, nomor) {
     document.getElementById('barangModalName').textContent    = name;
     document.getElementById('barangModalKode').textContent    = kode || '-';
     document.getElementById('barangModalKategori').textContent = kategori || '-';
@@ -520,7 +707,7 @@ function openBarangDetail(name, imgSrc, kategori, kondisi, jumlah, keterangan, k
         ketRow.style.display = 'none';
     }
 
-    // image
+    // image — klik gambar: tutup detail dulu, lalu buka lightbox
     const img   = document.getElementById('barangModalImg');
     const ph    = document.getElementById('barangModalImgPlaceholder');
     const wrap  = document.getElementById('barangModalImgWrap');
@@ -528,7 +715,10 @@ function openBarangDetail(name, imgSrc, kategori, kondisi, jumlah, keterangan, k
         img.src = imgSrc;
         img.style.display = 'block';
         ph.style.display  = 'none';
-        wrap.onclick = () => openImgModal(imgSrc, name);
+        wrap.onclick = () => {
+            closeBarangModal();
+            setTimeout(() => openImgModal(imgSrc, name), 220);
+        };
         wrap.style.cursor = 'zoom-in';
     } else {
         img.style.display = 'none';
@@ -545,9 +735,58 @@ function closeBarangModal() {
     document.body.style.overflow = '';
 }
 
+// ─── Live search filter ───────────────────────
+function filterBarang(q) {
+    q = q.toLowerCase().trim();
+    const cards   = document.querySelectorAll('#barangGrid .barang-card');
+    const emptyEl = document.getElementById('barangEmptySearch');
+    const countEl = document.getElementById('barangSearchCount');
+    let visible   = 0;
+    cards.forEach(card => {
+        const haystack = card.dataset.search || '';
+        const show = !q || haystack.includes(q);
+        card.style.display = show ? '' : 'none';
+        if (show) visible++;
+    });
+    countEl.textContent = visible + ' barang' + (q ? ' ditemukan' : '');
+    emptyEl.style.display = (visible === 0 && q) ? 'block' : 'none';
+}
+
+// ─── PIC photo modal ──────────────────────────
+function openPicModal(src, name) {
+    if (!src) return; // no foto, do nothing
+    document.getElementById('picModalImg').src = src;
+    document.getElementById('picModalImg').alt = name || '';
+    document.getElementById('picModalName').textContent = name || '';
+    document.getElementById('picModal').classList.add('show');
+    document.body.style.overflow = 'hidden';
+}
+function closePicModal() {
+    document.getElementById('picModal').classList.remove('show');
+    document.body.style.overflow = '';
+}
+
+// ─── Sort ─────────────────────────────────────
+function sortBarang(mode) {
+    const grid  = document.getElementById('barangGrid');
+    const cards = Array.from(grid.querySelectorAll('.barang-card'));
+    cards.sort((a, b) => {
+        const aOrder  = parseInt(a.dataset.order)  || 0;
+        const bOrder  = parseInt(b.dataset.order)  || 0;
+        const aJumlah = parseInt(a.dataset.jumlah) || 0;
+        const bJumlah = parseInt(b.dataset.jumlah) || 0;
+        if (mode === 'newest')    return bOrder  - aOrder;   // terbaru = id besar dulu
+        if (mode === 'oldest')    return aOrder  - bOrder;   // terlama = id kecil dulu
+        if (mode === 'unit_desc') return bJumlah - aJumlah;  // terbanyak
+        if (mode === 'unit_asc')  return aJumlah - bJumlah;  // tersedikit
+        return 0;
+    });
+    cards.forEach(c => grid.appendChild(c));
+    }
+
 // close modals on Escape
 document.addEventListener('keydown', e => {
-    if (e.key === 'Escape') { closeImgModal(); closeBarangModal(); }
+    if (e.key === 'Escape') { closeImgModal(); closeBarangModal(); closePicModal(); }
 });
 </script>
 @endpush

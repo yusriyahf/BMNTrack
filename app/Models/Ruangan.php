@@ -14,6 +14,7 @@ class Ruangan extends Model
         'luas_ruangan',
         'lantai',
         'pic_ruangan',
+        'foto_pic',
         'foto_ruangan',
         'tanggal_pendataan',
         'created_by',

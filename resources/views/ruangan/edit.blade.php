@@ -17,6 +17,18 @@
 .foto-preview-box:hover { border-color: var(--primary-light); }
 .foto-preview-box img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
 .foto-preview-box i { font-size: 32px; margin-bottom: 8px; }
+.foto-pic-box {
+    width: 100px; height: 100px;
+    border: 2px dashed var(--border);
+    border-radius: 50%;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    color: var(--text-light); font-size: 11px; text-align: center;
+    cursor: pointer; transition: var(--transition); position: relative; overflow: hidden;
+    background: var(--primary-ultra);
+}
+.foto-pic-box:hover { border-color: var(--primary-light); color: var(--primary); }
+.foto-pic-box img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.foto-pic-box i { font-size: 24px; margin-bottom: 4px; }
 </style>
 @endpush
 
@@ -78,11 +90,33 @@
                         value="{{ old('luas_ruangan', $ruangan->luas_ruangan) }}">
                 </div>
 
-                <div class="form-group" style="grid-column:1/-1;">
-                    <label class="form-label">PIC Ruangan</label>
-                    <input type="text" name="pic_ruangan"
-                        class="form-control"
-                        value="{{ old('pic_ruangan', $ruangan->pic_ruangan) }}">
+                <div class="form-group" style="grid-column:1/-1;display:flex;gap:16px;align-items:flex-start;flex-wrap:wrap;">
+                    <div style="flex:1;min-width:200px;">
+                        <label class="form-label">PIC Ruangan</label>
+                        <input type="text" name="pic_ruangan"
+                            class="form-control"
+                            value="{{ old('pic_ruangan', $ruangan->pic_ruangan) }}">
+                    </div>
+                    <div>
+                        <label class="form-label">Foto PIC</label>
+                        <div class="foto-pic-box" id="fotoPicBox" onclick="document.getElementById('foto_pic_input').click()" title="Klik untuk ganti foto PIC">
+                            @if($ruangan->foto_pic)
+                                <img src="{{ asset('storage/' . $ruangan->foto_pic) }}" alt="Foto PIC">
+                            @else
+                                <i class="fas fa-user-circle"></i>
+                                <span>Foto PIC</span>
+                            @endif
+                        </div>
+                        <input type="file" id="foto_pic_input" name="foto_pic"
+                            accept="image/*" style="display:none"
+                            onchange="previewFoto(this, 'fotoPicBox')">
+                        <small style="color:var(--text-light);font-size:11px;display:block;margin-top:4px;text-align:center;width:100px;">
+                            Klik untuk ganti
+                        </small>
+                        @error('foto_pic')
+                        <div class="form-error"><i class="fas fa-triangle-exclamation"></i> {{ $message }}</div>
+                        @enderror
+                    </div>
                 </div>
 
                 <div class="form-group">
