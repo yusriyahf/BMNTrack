@@ -6,6 +6,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\GedungController;
 use App\Http\Controllers\RuanganController;
 use App\Http\Controllers\BarangController;
+use App\Http\Controllers\UserController;
 
 // Auth
 Route::get('/', [AuthController::class, 'showLogin'])->name('login');
@@ -31,4 +32,15 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/barang/{barang}/edit', [BarangController::class, 'edit'])->name('barang.edit');
     Route::put('/barang/{barang}', [BarangController::class, 'update'])->name('barang.update');
     Route::delete('/barang/{barang}', [BarangController::class, 'destroy'])->name('barang.destroy');
+
+    // Manajemen User — hanya admin
+    Route::middleware('admin')->group(function () {
+        Route::get('/users', [UserController::class, 'index'])->name('users.index');
+        Route::post('/users', [UserController::class, 'store'])->name('users.store');
+        Route::get('/users/{user}', [UserController::class, 'show'])->name('users.show');
+        Route::put('/users/{user}', [UserController::class, 'update'])->name('users.update');
+        Route::put('/users/{user}/password', [UserController::class, 'changePassword'])->name('users.password');
+        Route::delete('/users/{user}', [UserController::class, 'destroy'])->name('users.destroy');
+    });
 });
+

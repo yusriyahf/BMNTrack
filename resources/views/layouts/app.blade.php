@@ -542,6 +542,15 @@
         <a href="{{ route('barang.index') }}" class="nav-item {{ request()->routeIs('barang.*') ? 'active' : '' }}">
             <i class="fas fa-box-open"></i> Data Barang
         </a>
+
+        @auth
+        @if(auth()->user()->role === 'admin')
+        <div class="nav-label">Administrasi</div>
+        <a href="{{ route('users.index') }}" class="nav-item {{ request()->routeIs('users.*') ? 'active' : '' }}">
+            <i class="fas fa-users-gear"></i> Manajemen User
+        </a>
+        @endif
+        @endauth
     </nav>
 
     <div class="sidebar-footer">
