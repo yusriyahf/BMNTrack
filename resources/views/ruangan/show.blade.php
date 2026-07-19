@@ -412,7 +412,9 @@
 <div class="ruangan-detail-header">
     <div class="ruangan-foto" onclick="openImgModal('{{ $ruangan->foto_ruangan ? asset('storage/'.$ruangan->foto_ruangan) : '' }}', '{{ $ruangan->nama_ruangan }}')">
         @if($ruangan->foto_ruangan)
-            <img src="{{ asset('storage/' . $ruangan->foto_ruangan) }}" alt="{{ $ruangan->nama_ruangan }}">
+            <img src="{{ asset('storage/' . $ruangan->foto_ruangan) }}"
+                 alt="{{ $ruangan->nama_ruangan }}"
+                 loading="lazy" decoding="async">
         @else
             <i class="fas fa-door-open ruangan-foto-placeholder"></i>
         @endif
@@ -453,7 +455,9 @@
                     <label><i class="fas fa-user-tie"></i> PIC</label>
                     <div class="pic-avatar">
                         @if($ruangan->foto_pic)
-                            <img src="{{ asset('storage/'.$ruangan->foto_pic) }}" class="pic-thumb" alt="PIC">
+                            <img src="{{ asset('storage/'.$ruangan->foto_pic) }}"
+                                 class="pic-thumb" alt="PIC"
+                                 loading="lazy" decoding="async">
                         @else
                             <span class="pic-thumb-placeholder"><i class="fas fa-user"></i></span>
                         @endif
@@ -547,7 +551,9 @@
             <div class="barang-card-img">
                 <span class="card-number-badge">{{ $chronoNo }}</span>
                 @if($b->foto_barang)
-                    <img src="{{ asset('storage/' . $b->foto_barang) }}" alt="{{ $b->nama_barang }}">
+                    <img src="{{ asset('storage/' . $b->foto_barang) }}"
+                         alt="{{ $b->nama_barang }}"
+                         loading="lazy" decoding="async">
                     <span class="img-zoom-icon" onclick="event.stopPropagation(); openImgModal('{{ asset('storage/'.$b->foto_barang) }}', '{{ addslashes($b->nama_barang) }}')">
                         <i class="fas fa-search-plus"></i>
                     </span>
