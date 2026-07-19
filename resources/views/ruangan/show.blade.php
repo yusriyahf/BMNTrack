@@ -475,6 +475,11 @@
         <a href="{{ route('ruangan.edit', $ruangan) }}" class="btn btn-outline" style="border-color:var(--border);color:var(--text);">
             <i class="fas fa-pen"></i> Edit Ruangan
         </a>
+        <a href="{{ route('ruangan.cetak-pdf', $ruangan) }}" class="btn btn-outline" target="_blank"
+           style="border-color:#e56900;color:#e56900;"
+           title="Cetak Rekap Daftar Barang Ruangan sebagai PDF">
+            <i class="fas fa-file-pdf"></i> Cetak Rekap PDF
+        </a>
     </div>
 </div>
 
@@ -634,6 +639,10 @@
         <div class="bmnmodal-detail-body">
             <div class="bmnmodal-detail-title" id="barangModalName"></div>
             <div class="bmnmodal-detail-rows">
+                <div class="bmnmodal-detail-row" id="barangModalKetRow">
+                    <span class="dr-label"><i class="fas fa-info-circle"></i> Keterangan</span>
+                    <span class="dr-val" id="barangModalKet"></span>
+                </div>
                 <div class="bmnmodal-detail-row">
                     <span class="dr-label"><i class="fas fa-barcode"></i> Kode</span>
                     <span class="dr-val" id="barangModalKode"></span>
@@ -650,10 +659,7 @@
                     <span class="dr-label"><i class="fas fa-cubes"></i> Jumlah</span>
                     <span class="dr-val" id="barangModalJumlah"></span>
                 </div>
-                <div class="bmnmodal-detail-row" id="barangModalKetRow">
-                    <span class="dr-label"><i class="fas fa-info-circle"></i> Keterangan</span>
-                    <span class="dr-val" id="barangModalKet"></span>
-                </div>
+                
             </div>
         </div>
     </div>

@@ -22,6 +22,7 @@ Route::middleware(['auth'])->group(function () {
 
     // Ruangan
     Route::resource('ruangan', RuanganController::class);
+    Route::get('/ruangan/{ruangan}/cetak-pdf', [RuanganController::class, 'cetakPdf'])->name('ruangan.cetak-pdf');
 
     // Barang (nested under ruangan for create)
     Route::get('/ruangan/{ruangan}/barang/create', [BarangController::class, 'create'])->name('ruangan.barang.create');

@@ -203,11 +203,7 @@
                         <option value="">-- Pilih Kategori --</option>
                         <option value="Furniture" {{ old('kategori') == 'Furniture' ? 'selected' : '' }}>Furniture</option>
                         <option value="Elektronik" {{ old('kategori') == 'Elektronik' ? 'selected' : '' }}>Elektronik</option>
-                        <option value="Komputer & IT" {{ old('kategori') == 'Komputer & IT' ? 'selected' : '' }}>Komputer & IT</option>
-                        <option value="Peralatan Kantor" {{ old('kategori') == 'Peralatan Kantor' ? 'selected' : '' }}>Peralatan Kantor</option>
-                        <option value="Peralatan Lab" {{ old('kategori') == 'Peralatan Lab' ? 'selected' : '' }}>Peralatan Lab</option>
-                        <option value="Kendaraan" {{ old('kategori') == 'Kendaraan' ? 'selected' : '' }}>Kendaraan</option>
-                        <option value="Lainnya" {{ old('kategori') == 'Lainnya' ? 'selected' : '' }}>Lainnya</option>
+                       
                     </select>
                 </div>
 

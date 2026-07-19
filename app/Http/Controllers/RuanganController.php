@@ -7,6 +7,7 @@ use App\Models\Gedung;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class RuanganController extends Controller
 {
@@ -126,5 +127,33 @@ class RuanganController extends Controller
         }
         $ruangan->delete();
         return redirect()->route('ruangan.index')->with('success', 'Ruangan berhasil dihapus.');
+    }
+
+    /**
+     * Cetak Rekap Daftar Barang Ruangan dalam bentuk PDF.
+     */
+    public function cetakPdf(Ruangan $ruangan)
+    {
+        $ruangan->load(['gedung', 'barang']);
+
+        // Urutkan barang berdasarkan nama
+        $barangList = $ruangan->barang->sortBy('nama_barang')->values();
+
+        $data = [
+            'ruangan'      => $ruangan,
+            'barangList'   => $barangList,
+            'tglCetak'     => now()->locale('id')->translatedFormat('d-m-Y'),
+            'kodeUAKPB'    => '023.18.05.677606.001',
+            'kodeRuangan'  => strtoupper(substr(preg_replace('/[^A-Za-z0-9]/', '', $ruangan->nama_ruangan), 0, 10)),
+            'namaDirektur' => 'Supriatna Adhisuwignjo, S.T., M.T.',
+            'nipDirektur'  => '197101081999031001',
+        ];
+
+        $pdf = Pdf::loadView('ruangan.pdf_rekap', $data)
+                  ->setPaper('a4', 'portrait');
+
+        $fileName = 'Rekap_Barang_' . preg_replace('/[^A-Za-z0-9_-]/', '_', $ruangan->nama_ruangan) . '_' . now()->format('Ymd') . '.pdf';
+
+        return $pdf->stream($fileName);
     }
 }

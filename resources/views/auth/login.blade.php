@@ -302,10 +302,10 @@
         </button>
     </form>
 
-    <div class="form-footer">
+    <!-- <div class="form-footer">
         <p>Akun Demo: <strong>admin</strong> / <strong>admin123</strong></p>
         <p style="margin-top:4px;">Atau: <strong>petugas</strong> / <strong>petugas123</strong></p>
-    </div>
+    </div> -->
 </div>
 
 <script>
