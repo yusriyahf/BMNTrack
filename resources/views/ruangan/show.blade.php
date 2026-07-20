@@ -425,7 +425,7 @@
         <div class="ruangan-date-sub">
             <i class="fas fa-calendar-alt"></i>
             Tanggal Pendataan:
-            <strong>{{ optional($ruangan->tanggal_pendataan)->format('d/m/Y') ?? '-' }}</strong>
+            <strong>{{ optional($ruangan->tanggal_pendataan)->locale('id')->translatedFormat('d F Y') ?? '-' }}</strong>
         </div>
 
         {{-- Mobile: toggle button --}}
@@ -468,6 +468,20 @@
                     <label><i class="fas fa-box"></i> Total Barang</label>
                     <span>{{ $ruangan->barang->count() }} jenis ({{ $ruangan->barang->sum('jumlah') }} unit)</span>
                 </div>
+                <div class="info-item">
+                    <label><i class="fas fa-user-plus"></i> Dibuat Oleh</label>
+                    <span>{{ $ruangan->createdBy->nama ?? '-' }}
+                        @if($ruangan->created_at)<small style="display:block;color:var(--text-light);font-size:11px;">{{ $ruangan->created_at->locale('id')->translatedFormat('d F Y, H:i') }}</small>@endif
+                    </span>
+                </div>
+                @if($ruangan->updated_by)
+                <div class="info-item">
+                    <label><i class="fas fa-user-pen"></i> Diedit Oleh</label>
+                    <span>{{ $ruangan->updatedBy->nama ?? '-' }}
+                        @if($ruangan->updated_at)<small style="display:block;color:var(--text-light);font-size:11px;">{{ $ruangan->updated_at->locale('id')->translatedFormat('d F Y, H:i') }}</small>@endif
+                    </span>
+                </div>
+                @endif
             </div>
         </div>
     </div>
@@ -493,11 +507,11 @@
         <h5><i class="fas fa-boxes-stacked text-primary"></i> Daftar Inventaris Barang</h5>
         <div class="d-flex gap-2 align-items-center">
             @php
-                $totalAman  = $ruangan->barang->where('kondisi', 'Aman')->count();
-                $totalRusak = $ruangan->barang->where('kondisi', 'Rusak')->count();
+                $totalBaik  = $ruangan->barang->where('kondisi', 'Baik')->count();
+                $totalRusak = $ruangan->barang->where('kondisi', 'Rusak berat')->count();
             @endphp
-            <span class="badge badge-success"><i class="fas fa-shield-check"></i> {{ $totalAman }} Aman</span>
-            <span class="badge badge-danger"><i class="fas fa-triangle-exclamation"></i> {{ $totalRusak }} Rusak</span>
+            <span class="badge badge-success"><i class="fas fa-check-circle"></i> {{ $totalBaik }} Baik</span>
+            <span class="badge badge-danger"><i class="fas fa-triangle-exclamation"></i> {{ $totalRusak }} Rusak berat</span>
         </div>
     </div>
 
@@ -546,7 +560,11 @@
                 {{ $b->jumlah }},
                 '{{ addslashes($b->keterangan ?? '') }}',
                 '{{ addslashes($b->kode_barang ?? '-') }}',
-                {{ $chronoNo }}
+                {{ $chronoNo }},
+                '{{ addslashes($b->createdBy->nama ?? '-') }}',
+                '{{ $b->created_at ? $b->created_at->locale('id')->translatedFormat('d F Y, H:i') : '-' }}',
+                '{{ addslashes($b->updatedBy->nama ?? '') }}',
+                '{{ $b->updated_at && $b->updated_by ? $b->updated_at->locale('id')->translatedFormat('d F Y, H:i') : '' }}'
              )">
             <div class="barang-card-img">
                 <span class="card-number-badge">{{ $chronoNo }}</span>
@@ -561,8 +579,8 @@
                     <div class="barang-card-img-placeholder"><i class="fas fa-box"></i></div>
                 @endif
                 <div class="kondisi-badge-overlay">
-                    <span class="badge {{ $b->kondisi === 'Aman' ? 'badge-success' : 'badge-danger' }}">
-                        {{ $b->kondisi === 'Aman' ? '✓' : '!' }} {{ $b->kondisi }}
+                    <span class="badge {{ $b->kondisi === 'Baik' ? 'badge-success' : 'badge-danger' }}">
+                        {{ $b->kondisi === 'Baik' ? '✓' : '!' }} {{ $b->kondisi }}
                     </span>
                 </div>
             </div>
@@ -665,7 +683,14 @@
                     <span class="dr-label"><i class="fas fa-cubes"></i> Jumlah</span>
                     <span class="dr-val" id="barangModalJumlah"></span>
                 </div>
-                
+                <div class="bmnmodal-detail-row" id="barangModalAuditCreate">
+                    <span class="dr-label"><i class="fas fa-user-plus"></i> Ditambahkan</span>
+                    <span class="dr-val" id="barangModalCreated"></span>
+                </div>
+                <div class="bmnmodal-detail-row" id="barangModalAuditUpdate" style="display:none">
+                    <span class="dr-label"><i class="fas fa-user-pen"></i> Diedit</span>
+                    <span class="dr-val" id="barangModalUpdated"></span>
+                </div>
             </div>
         </div>
     </div>
@@ -698,16 +723,33 @@ function closeImgModal() {
 }
 
 // ─── Barang detail popup ──────────────────────
-function openBarangDetail(name, imgSrc, kategori, kondisi, jumlah, keterangan, kode, nomor) {
-    document.getElementById('barangModalName').textContent    = name;
-    document.getElementById('barangModalKode').textContent    = kode || '-';
+function openBarangDetail(name, imgSrc, kategori, kondisi, jumlah, keterangan, kode, nomor,
+                          createdByName, createdAt, updatedByName, updatedAt) {
+    document.getElementById('barangModalName').textContent     = name;
+    document.getElementById('barangModalKode').textContent     = kode || '-';
     document.getElementById('barangModalKategori').textContent = kategori || '-';
-    document.getElementById('barangModalJumlah').textContent  = jumlah + ' Unit';
+    document.getElementById('barangModalJumlah').textContent   = jumlah + ' Unit';
+
+    // Audit: dibuat oleh
+    const createdText = (createdByName && createdByName !== '-')
+        ? createdByName + (createdAt ? ' · ' + createdAt : '')
+        : '-';
+    document.getElementById('barangModalCreated').textContent = createdText;
+
+    // Audit: diedit oleh
+    const updateRow = document.getElementById('barangModalAuditUpdate');
+    if (updatedByName && updatedByName.trim()) {
+        document.getElementById('barangModalUpdated').textContent =
+            updatedByName + (updatedAt ? ' · ' + updatedAt : '');
+        updateRow.style.display = 'flex';
+    } else {
+        updateRow.style.display = 'none';
+    }
 
     // kondisi badge color
     const kondisiEl = document.getElementById('barangModalKondisi');
     kondisiEl.textContent = kondisi;
-    kondisiEl.style.color = kondisi === 'Aman' ? '#16a34a' : '#dc2626';
+    kondisiEl.style.color = kondisi === 'Baik' ? '#16a34a' : '#dc2626';
 
     // keterangan
     const ketRow = document.getElementById('barangModalKetRow');

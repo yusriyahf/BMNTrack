@@ -151,10 +151,10 @@
     <!-- Ruangan Cards -->
     <div class="ruangan-grid">
         @forelse($ruangan as $r)
-        <div class="ruangan-card">
+        <div class="ruangan-card" style="cursor:pointer;" onclick="window.location='{{ route('ruangan.show', $r) }}'">
             @if($r->foto_ruangan)
-                <div class="ruangan-card-img-wrap" onclick="openImgModal('{{ asset('storage/'.$r->foto_ruangan) }}', '{{ addslashes($r->nama_ruangan) }}')">
-                    <img src="{{ asset('storage/' . $r->foto_ruangan) }}" alt="{{ $r->nama_ruangan }}" class="ruangan-card-img">
+                <div class="ruangan-card-img-wrap" onclick="event.stopPropagation(); openImgModal('{{ asset('storage/'.$r->foto_ruangan) }}', '{{ addslashes($r->nama_ruangan) }}')">
+                    <img src="{{ asset('storage/' . $r->foto_ruangan) }}" alt="{{ $r->nama_ruangan }}" class="ruangan-card-img" loading="lazy" decoding="async">
                     <span class="ruangan-card-img-zoom"><i class="fas fa-search-plus"></i></span>
                 </div>
             @else
@@ -183,8 +183,18 @@
                     <i class="fas fa-expand"></i> Luas: {{ $r->luas_ruangan }}
                 </div>
                 @endif
+                <div style="font-size:11px;color:var(--text-light);margin-top:6px;border-top:1px solid var(--border);padding-top:6px;">
+                    Ditambahkan:
+                    {{ $r->createdBy->nama ?? '-' }} &nbsp;&middot;&nbsp; {{ $r->created_at?->locale('id')->translatedFormat('d F Y') ?? '-' }}
+                </div>
+                @if($r->updated_by)
+                <div style="font-size:11px;color:var(--text-light);margin-top:2px;">
+                    Diedit:
+                    {{ $r->updatedBy->nama ?? '-' }} &nbsp;&middot;&nbsp; {{ $r->updated_at?->locale('id')->translatedFormat('d F Y') ?? '-' }}
+                </div>
+                @endif
             </div>
-            <div class="ruangan-card-footer">
+            <div class="ruangan-card-footer" onclick="event.stopPropagation()">
                 <a href="{{ route('ruangan.show', $r) }}" class="btn btn-primary btn-sm">
                     <i class="fas fa-eye"></i> Detail
                 </a>

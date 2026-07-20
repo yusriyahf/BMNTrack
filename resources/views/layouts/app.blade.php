@@ -159,7 +159,7 @@
             padding: 12px;
             border-top: 1px solid rgba(255,255,255,.08);
         }
-        .sidebar-footer form button {
+        .sidebar-logout-btn {
             width: 100%;
             display: flex; align-items: center; gap: 10px;
             padding: 10px 12px;
@@ -171,7 +171,7 @@
             cursor: pointer;
             transition: var(--transition);
         }
-        .sidebar-footer form button:hover {
+        .sidebar-logout-btn:hover {
             background: rgba(239,68,68,.25);
             color: #fee2e2;
         }
@@ -208,13 +208,23 @@
         }
         .topbar-badge {
             display: flex; align-items: center; gap: 8px;
-            padding: 6px 14px;
-            background: var(--primary-ultra);
-            border: 1px solid var(--primary-xlight);
-            border-radius: 20px;
-            font-size: 12px; font-weight: 600;
-            color: var(--primary);
+            font-size: 12.5px; color: var(--text-light);
+            background: var(--bg-body); border-radius: 8px;
+            padding: 6px 12px; font-weight: 500;
         }
+        .topbar-logout {
+            display: flex; align-items: center; gap: 7px;
+            padding: 6px 14px;
+            background: rgba(239,68,68,.08);
+            border: 1px solid rgba(239,68,68,.18);
+            border-radius: 8px;
+            color: #dc2626;
+            font-size: 12.5px; font-weight: 600;
+            cursor: pointer;
+            transition: background .2s, color .2s;
+            white-space: nowrap;
+        }
+        .topbar-logout:hover { background: rgba(239,68,68,.18); }
 
         /* ─── MAIN ─────────────────────────────────────── */
         .main-wrapper {
@@ -495,6 +505,14 @@
             color: var(--text-light);
             background: var(--bg-card);
         }
+    /* ── Global Modal (logout confirm, dll) ── */
+    .um-backdrop{position:fixed;inset:0;background:rgba(0,0,0,.55);backdrop-filter:blur(4px);z-index:9999;display:flex;align-items:center;justify-content:center;padding:20px;opacity:0;pointer-events:none;transition:opacity .25s;}
+    .um-backdrop.show{opacity:1;pointer-events:all;}
+    .um-modal{background:var(--bg-card);border-radius:16px;width:100%;max-width:460px;box-shadow:0 24px 60px rgba(0,0,0,.35);transform:translateY(24px) scale(.97);transition:transform .28s;overflow:hidden;}
+    .um-backdrop.show .um-modal{transform:translateY(0) scale(1);}
+    .um-modal-header{padding:20px 24px 16px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--border);}
+    .um-modal-body{padding:20px 24px;}
+    .um-modal-footer{padding:14px 24px;border-top:1px solid var(--border);display:flex;justify-content:flex-end;gap:8px;}
     </style>
 
     @stack('styles')
@@ -506,7 +524,7 @@
 
 <!-- Sidebar -->
 <aside class="sidebar" id="sidebar">
-    <div class="sidebar-brand">
+    <a href="{{ route('dashboard') }}" class="sidebar-brand" style="text-decoration:none;color:inherit;display:flex;align-items:center;gap:12px;">
         <div class="sidebar-brand-icon">
             <i class="fas fa-boxes-stacked"></i>
         </div>
@@ -514,7 +532,7 @@
             <h2>BMNTrack</h2>
             <p>Inventaris Aset Kampus</p>
         </div>
-    </div>
+    </a>
 
     @auth
     <div class="sidebar-user">
@@ -555,15 +573,44 @@
 
     <div class="sidebar-footer">
         @auth
-        <form method="POST" action="{{ route('logout') }}">
+        {{-- Hidden real logout form --}}
+        <form method="POST" action="{{ route('logout') }}" id="logoutForm">
             @csrf
-            <button type="submit">
-                <i class="fas fa-right-from-bracket"></i> Keluar
-            </button>
         </form>
+        {{-- Button triggers modal --}}
+        <button type="button" class="sidebar-logout-btn"
+                onclick="document.getElementById('logoutModal').classList.add('show')">
+            <i class="fas fa-right-from-bracket"></i> Keluar
+        </button>
         @endauth
     </div>
 </aside>
+
+{{-- ═══ MODAL: Konfirmasi Logout ═══ --}}
+<div class="um-backdrop" id="logoutModal" style="z-index:99999;">
+    <div class="um-modal" style="max-width:360px;" onclick="event.stopPropagation()">
+        <div class="um-modal-header">
+            <h5 style="font-size:16px;font-weight:700;display:flex;align-items:center;gap:8px;margin:0;">
+                <i class="fas fa-right-from-bracket" style="color:var(--danger)"></i> Konfirmasi Keluar
+            </h5>
+        </div>
+        <div class="um-modal-body">
+            <p style="font-size:14px;line-height:1.7;color:var(--text-light);">
+                Apakah Anda yakin ingin keluar dari aplikasi?
+            </p>
+        </div>
+        <div class="um-modal-footer">
+            <button type="button" class="btn btn-outline"
+                    onclick="document.getElementById('logoutModal').classList.remove('show')">
+                Batal
+            </button>
+            <button type="button" class="btn btn-danger"
+                    onclick="document.getElementById('logoutForm').submit()">
+                <i class="fas fa-right-from-bracket"></i> Ya, Keluar
+            </button>
+        </div>
+    </div>
+</div>
 
 <!-- Topbar -->
 <header class="topbar">
@@ -578,6 +625,13 @@
         <i class="fas fa-calendar-day"></i>
         {{ now()->locale('id')->translatedFormat('d M Y') }}
     </div>
+    @auth
+    <button type="button" class="topbar-logout"
+            onclick="document.getElementById('logoutModal').classList.add('show')">
+        <i class="fas fa-right-from-bracket"></i>
+        <span class="topbar-logout-text">Keluar</span>
+    </button>
+    @endauth
 </header>
 
 <!-- Main -->

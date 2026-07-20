@@ -18,6 +18,7 @@ class Ruangan extends Model
         'foto_ruangan',
         'tanggal_pendataan',
         'created_by',
+        'updated_by',
     ];
 
     protected $casts = [
@@ -32,6 +33,11 @@ class Ruangan extends Model
     public function createdBy()
     {
         return $this->belongsTo(User::class, 'created_by');
+    }
+
+    public function updatedBy()
+    {
+        return $this->belongsTo(User::class, 'updated_by');
     }
 
     public function barang()

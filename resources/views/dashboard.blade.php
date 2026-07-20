@@ -166,34 +166,6 @@
 
 <!-- Content Grid -->
 <div class="content-grid">
-    <!-- Gedung Summary -->
-    <!-- <div class="card">
-        <div class="card-header">
-            <h5><i class="fas fa-building text-primary"></i> Rekap per Gedung</h5>
-            <a href="{{ route('gedung.index') }}" class="btn btn-outline btn-sm">Lihat Semua</a>
-        </div>
-        <div class="gedung-list">
-            @forelse($gedungStats as $g)
-            <div class="gedung-mini">
-                <div class="gedung-mini-icon"><i class="fas fa-building"></i></div>
-                <div class="gedung-mini-info">
-                    <strong>{{ $g->nama_gedung }}</strong>
-                    <span>{{ $g->kode_gedung }}</span>
-                </div>
-                <div class="gedung-mini-badges">
-                    <span class="badge badge-primary">{{ $g->ruangan_count }} Ruangan</span>
-                    <small>{{ number_format($g->total_barang) }} unit</small>
-                </div>
-            </div>
-            @empty
-            <div class="empty-state">
-                <i class="fas fa-building"></i>
-                <p>Belum ada data gedung</p>
-            </div>
-            @endforelse
-        </div>
-    </div> -->
-
     <!-- Recent Barang -->
     <div class="card">
         <div class="card-header">
@@ -213,7 +185,7 @@
                     <span>{{ $b->ruangan->nama_ruangan ?? '-' }} · {{ $b->ruangan->gedung->nama_gedung ?? '-' }}</span>
                 </div>
                 <div class="recent-right">
-                    <span class="badge {{ $b->kondisi === 'Aman' ? 'badge-success' : 'badge-danger' }}">
+                    <span class="badge {{ $b->kondisi === 'Baik' ? 'badge-success' : 'badge-danger' }}">
                         {{ $b->kondisi }}
                     </span>
                     <div style="font-size:12px;color:var(--text-light);margin-top:4px;">{{ $b->jumlah }} unit</div>

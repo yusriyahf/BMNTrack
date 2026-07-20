@@ -13,7 +13,7 @@ class RuanganController extends Controller
 {
     public function index(Request $request)
     {
-        $query = Ruangan::with(['gedung', 'createdBy'])->withCount('barang');
+        $query = Ruangan::with(['gedung', 'createdBy', 'updatedBy'])->withCount('barang');
 
         if ($request->filled('gedung_id')) {
             $query->where('gedung_id', $request->gedung_id);
@@ -71,7 +71,7 @@ class RuanganController extends Controller
 
     public function show(Ruangan $ruangan)
     {
-        $ruangan->load(['gedung', 'createdBy', 'barang']);
+        $ruangan->load(['gedung', 'createdBy', 'updatedBy', 'barang.createdBy', 'barang.updatedBy']);
         return view('ruangan.show', compact('ruangan'));
     }
 
@@ -112,6 +112,7 @@ class RuanganController extends Controller
             $data['foto_pic'] = $request->file('foto_pic')->store('ruangan/pic', 'public');
         }
 
+        $data['updated_by'] = Auth::id();
         $ruangan->update($data);
 
         return redirect()->route('ruangan.show', $ruangan)->with('success', 'Ruangan berhasil diperbarui.');

@@ -94,8 +94,8 @@
         {{-- Kondisi --}}
         <select name="kondisi" class="form-control" style="max-width:160px;">
             <option value="">Semua Kondisi</option>
-            <option value="Aman"  {{ request('kondisi') === 'Aman'  ? 'selected' : '' }}>Kondisi Aman</option>
-            <option value="Rusak" {{ request('kondisi') === 'Rusak' ? 'selected' : '' }}>Kondisi Rusak</option>
+            <option value="Baik"  {{ request('kondisi') === 'Baik'  ? 'selected' : '' }}>Kondisi Baik</option>
+            <option value="Rusak berat" {{ request('kondisi') === 'Rusak berat' ? 'selected' : '' }}>Kondisi Rusak berat</option>
         </select>
 
         {{-- Gedung --}}
@@ -193,8 +193,8 @@
                         <span style="font-size:11.5px;color:var(--text-light);"> unit</span>
                     </td>
                     <td>
-                        <span class="badge {{ $b->kondisi === 'Aman' ? 'badge-success' : 'badge-danger' }}">
-                            <i class="fas {{ $b->kondisi === 'Aman' ? 'fa-shield-check' : 'fa-triangle-exclamation' }}"></i>
+                        <span class="badge {{ $b->kondisi === 'Baik' ? 'badge-success' : 'badge-danger' }}">
+                            <i class="fas {{ $b->kondisi === 'Baik' ? 'fa-check-circle' : 'fa-triangle-exclamation' }}"></i>
                             {{ $b->kondisi }}
                         </span>
                     </td>

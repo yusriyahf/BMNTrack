@@ -87,7 +87,7 @@
 .kondisi-opt-label { display: flex; flex-direction: column; align-items: center; gap: 6px; }
 .kondisi-opt-label i { font-size: 22px; }
 .kondisi-opt-label span { font-size: 13px; font-weight: 600; }
-.kondisi-opt.selected-aman {
+.kondisi-opt.selected-baik {
     border-color: var(--success);
     background: #d1fae5; color: #065f46;
 }
@@ -224,22 +224,22 @@
             <div class="form-group">
                 <label class="form-label">Kondisi <span class="required">*</span></label>
                 <div class="kondisi-toggle">
-                    <label class="kondisi-opt {{ old('kondisi', 'Aman') === 'Aman' ? 'selected-aman' : '' }}" id="opt-aman">
-                        <input type="radio" name="kondisi" value="Aman"
-                            {{ old('kondisi', 'Aman') === 'Aman' ? 'checked' : '' }}
+                    <label class="kondisi-opt {{ old('kondisi', 'Baik') === 'Baik' ? 'selected-baik' : '' }}" id="opt-baik">
+                        <input type="radio" name="kondisi" value="Baik"
+                            {{ old('kondisi', 'Baik') === 'Baik' ? 'checked' : '' }}
                             onchange="updateKondisi(this)">
                         <div class="kondisi-opt-label">
-                            <i class="fas fa-shield-check"></i>
-                            <span>Aman</span>
+                            <i class="fas fa-check-circle"></i>
+                            <span>Baik</span>
                         </div>
                     </label>
-                    <label class="kondisi-opt {{ old('kondisi') === 'Rusak' ? 'selected-rusak' : '' }}" id="opt-rusak">
-                        <input type="radio" name="kondisi" value="Rusak"
-                            {{ old('kondisi') === 'Rusak' ? 'checked' : '' }}
+                    <label class="kondisi-opt {{ old('kondisi') === 'Rusak berat' ? 'selected-rusak' : '' }}" id="opt-rusak">
+                        <input type="radio" name="kondisi" value="Rusak berat"
+                            {{ old('kondisi') === 'Rusak berat' ? 'checked' : '' }}
                             onchange="updateKondisi(this)">
                         <div class="kondisi-opt-label">
                             <i class="fas fa-triangle-exclamation"></i>
-                            <span>Rusak</span>
+                            <span>Rusak berat</span>
                         </div>
                     </label>
                 </div>
@@ -376,10 +376,10 @@ window.addEventListener('beforeunload', stopCamera);
 
 // Kondisi toggle styling
 function updateKondisi(radio) {
-    document.getElementById('opt-aman').className  = 'kondisi-opt';
+    document.getElementById('opt-baik').className  = 'kondisi-opt';
     document.getElementById('opt-rusak').className = 'kondisi-opt';
-    if (radio.value === 'Aman') {
-        document.getElementById('opt-aman').classList.add('selected-aman');
+    if (radio.value === 'Baik') {
+        document.getElementById('opt-baik').classList.add('selected-baik');
     } else {
         document.getElementById('opt-rusak').classList.add('selected-rusak');
     }

@@ -52,7 +52,7 @@
                         </span>
                     </td>
                     <td style="color:var(--text-light);font-size:12.5px;">
-                        {{ $g->created_at->format('d/m/Y') }}
+                        {{ $g->created_at->locale('id')->translatedFormat('d F Y') }}
                     </td>
                     <td>
                         <div class="d-flex gap-2">

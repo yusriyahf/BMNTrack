@@ -6,6 +6,7 @@ use App\Models\Barang;
 use App\Models\Ruangan;
 use App\Models\Gedung;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 
 class BarangController extends Controller
@@ -45,7 +46,7 @@ class BarangController extends Controller
             'nama_barang' => 'required|string|max:150',
             'kategori'    => 'nullable|string|max:100',
             'jumlah'      => 'required|integer|min:1',
-            'kondisi'     => 'required|in:Aman,Rusak',
+            'kondisi'     => 'required|in:Baik,Rusak berat',
             'foto_barang' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:5120',
             'keterangan'  => 'nullable|string',
         ], [
@@ -72,6 +73,7 @@ class BarangController extends Controller
             }
         }
 
+        $data['created_by'] = Auth::id();
         Barang::create($data);
 
         return redirect()->route('ruangan.show', $ruangan)->with('success', 'Barang berhasil ditambahkan.');
@@ -88,7 +90,7 @@ class BarangController extends Controller
             'nama_barang' => 'required|string|max:150',
             'kategori'    => 'nullable|string|max:100',
             'jumlah'      => 'required|integer|min:1',
-            'kondisi'     => 'required|in:Aman,Rusak',
+            'kondisi'     => 'required|in:Baik,Rusak berat',
             'foto_barang' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:5120',
             'keterangan'  => 'nullable|string',
         ]);
@@ -115,6 +117,7 @@ class BarangController extends Controller
             }
         }
 
+        $data['updated_by'] = Auth::id();
         $barang->update($data);
 
         return redirect()->route('ruangan.show', $barang->ruangan)->with('success', 'Barang berhasil diperbarui.');
