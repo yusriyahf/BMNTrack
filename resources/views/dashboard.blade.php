@@ -167,7 +167,7 @@
 <!-- Content Grid -->
 <div class="content-grid">
     <!-- Gedung Summary -->
-    <div class="card">
+    <!-- <div class="card">
         <div class="card-header">
             <h5><i class="fas fa-building text-primary"></i> Rekap per Gedung</h5>
             <a href="{{ route('gedung.index') }}" class="btn btn-outline btn-sm">Lihat Semua</a>
@@ -192,7 +192,7 @@
             </div>
             @endforelse
         </div>
-    </div>
+    </div> -->
 
     <!-- Recent Barang -->
     <div class="card">

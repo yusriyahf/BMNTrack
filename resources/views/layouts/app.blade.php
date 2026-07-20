@@ -634,5 +634,7 @@
 </script>
 
 @stack('scripts')
+<!-- Auto-convert image inputs to WebP before upload -->
+<script src="{{ asset('js/img-webp.js') }}" defer></script>
 </body>
 </html>

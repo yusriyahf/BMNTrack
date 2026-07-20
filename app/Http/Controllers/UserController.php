@@ -13,7 +13,7 @@ class UserController extends Controller
     /** Tampilkan daftar semua user */
     public function index()
     {
-        $users = User::latest()->get();
+        $users = User::oldest()->get();
         return view('users.index', compact('users'));
     }
 

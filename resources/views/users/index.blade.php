@@ -41,6 +41,12 @@
 .um-search-input:focus{border-color:var(--primary);box-shadow:0 0 0 3px rgba(26,79,186,.1);}
 .um-search-icon{position:relative;margin-right:-30px;z-index:1;color:var(--text-light);font-size:12px;padding-left:12px;pointer-events:none;}
 .um-err-box{margin-bottom:14px;padding:10px 14px;border-radius:8px;background:#fee2e2;color:#991b1b;border:1px solid #fca5a5;font-size:13px;display:none;}
+
+/* Password toggle */
+.pwd-wrap{position:relative;}
+.pwd-wrap .form-control{padding-right:42px;}
+.pwd-eye{position:absolute;right:12px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;color:var(--text-light);font-size:15px;padding:4px;line-height:1;transition:color .2s;}
+.pwd-eye:hover{color:var(--primary);}
 </style>
 @endpush
 
@@ -156,11 +162,17 @@
                 </div>
                 <div class="form-group">
                     <label class="form-label">Password <span class="required">*</span></label>
-                    <input type="password" name="password" id="addPassword" class="form-control" placeholder="Min. 6 karakter" required>
+                    <div class="pwd-wrap">
+                        <input type="password" name="password" id="addPassword" class="form-control" placeholder="Min. 6 karakter" required>
+                        <button type="button" class="pwd-eye" onclick="togglePwd('addPassword',this)" tabindex="-1"><i class="fas fa-eye"></i></button>
+                    </div>
                 </div>
                 <div class="form-group">
                     <label class="form-label">Konfirmasi Password <span class="required">*</span></label>
-                    <input type="password" name="password_confirmation" id="addPasswordConfirm" class="form-control" placeholder="Ulangi password" required>
+                    <div class="pwd-wrap">
+                        <input type="password" name="password_confirmation" id="addPasswordConfirm" class="form-control" placeholder="Ulangi password" required>
+                        <button type="button" class="pwd-eye" onclick="togglePwd('addPasswordConfirm',this)" tabindex="-1"><i class="fas fa-eye"></i></button>
+                    </div>
                 </div>
                 <div class="form-group" style="margin-bottom:0">
                     <label class="form-label">Role <span class="required">*</span></label>
@@ -228,11 +240,17 @@
             <p id="pwdUserLabel" style="font-size:13px;color:var(--text-light);margin-bottom:16px;"></p>
             <div class="form-group">
                 <label class="form-label">Password Baru <span class="required">*</span></label>
-                <input type="password" id="pwdNew" class="form-control" placeholder="Min. 6 karakter" required>
+                <div class="pwd-wrap">
+                    <input type="password" id="pwdNew" class="form-control" placeholder="Min. 6 karakter" required>
+                    <button type="button" class="pwd-eye" onclick="togglePwd('pwdNew',this)" tabindex="-1"><i class="fas fa-eye"></i></button>
+                </div>
             </div>
             <div class="form-group" style="margin-bottom:0">
                 <label class="form-label">Konfirmasi Password <span class="required">*</span></label>
-                <input type="password" id="pwdConfirm" class="form-control" placeholder="Ulangi password baru" required>
+                <div class="pwd-wrap">
+                    <input type="password" id="pwdConfirm" class="form-control" placeholder="Ulangi password baru" required>
+                    <button type="button" class="pwd-eye" onclick="togglePwd('pwdConfirm',this)" tabindex="-1"><i class="fas fa-eye"></i></button>
+                </div>
             </div>
         </div>
         <div class="um-modal-footer">
@@ -328,6 +346,19 @@ function clearErr(boxId) {
     var el = document.getElementById(boxId);
     el.style.display = 'none';
     el.innerHTML = '';
+}
+
+/* ── Password eye toggle ──────────────── */
+function togglePwd(inputId, btn) {
+    var inp  = document.getElementById(inputId);
+    var icon = btn.querySelector('i');
+    if (inp.type === 'password') {
+        inp.type = 'text';
+        icon.classList.replace('fa-eye', 'fa-eye-slash');
+    } else {
+        inp.type = 'password';
+        icon.classList.replace('fa-eye-slash', 'fa-eye');
+    }
 }
 
 /* ── Search ─────────────────────────────── */
